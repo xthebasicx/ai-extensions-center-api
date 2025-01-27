@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>AIExtensionsCenter.Domain</RootNamespace>
+    <AssemblyName>AIExtensionsCenter.Domain</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotenv.net" />
+    <PackageReference Include="MediatR" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Events\" />
+  </ItemGroup>
+
+</Project>
