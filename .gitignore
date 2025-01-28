@@ -482,3 +482,5 @@ $RECYCLE.BIN/
 .azure
 
 .env
+
+src/Web/Uploads/

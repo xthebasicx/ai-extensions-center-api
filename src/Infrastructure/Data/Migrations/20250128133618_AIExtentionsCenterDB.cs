@@ -5,7 +5,7 @@
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AIExtensionsCenterDB : Migration
+    public partial class AIExtentionsCenterDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -47,6 +47,24 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Extensions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtensionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Extensions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -193,6 +211,12 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Extensions_ExtensionName",
+                table: "Extensions",
+                column: "ExtensionName",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -212,6 +236,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Extensions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

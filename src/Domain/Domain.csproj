@@ -8,6 +8,7 @@
   <ItemGroup>
     <PackageReference Include="dotenv.net" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" />
   </ItemGroup>
 
   <ItemGroup>
