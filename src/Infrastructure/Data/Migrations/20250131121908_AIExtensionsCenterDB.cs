@@ -1,11 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AIExtentionsCenterDB : Migration
+    public partial class AIExtensionsCenterDB : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,6 +66,25 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Extensions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Licenses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LicenseKey = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ActivationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Licenses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -217,6 +237,12 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 table: "Extensions",
                 column: "ExtensionName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Licenses_LicenseKey",
+                table: "Licenses",
+                column: "LicenseKey",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -239,6 +265,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Extensions");
+
+            migrationBuilder.DropTable(
+                name: "Licenses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

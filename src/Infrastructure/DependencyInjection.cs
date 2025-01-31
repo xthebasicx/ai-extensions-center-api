@@ -3,19 +3,19 @@ using AIExtensionsCenter.Domain.Constants;
 using AIExtensionsCenter.Infrastructure.Data;
 using AIExtensionsCenter.Infrastructure.Data.Interceptors;
 using AIExtensionsCenter.Infrastructure.Identity;
-using dotenv.net.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static void AddInfrastructureServices(this IHostApplicationBuilder builder)
+    public static void AddInfrastructureServices(this IHostApplicationBuilder builder,IConfiguration configuration)
     {
-        var connectionString = EnvReader.GetStringValue("DB_URI");
+        var connectionString = configuration["DB_URI"];
         Guard.Against.Null(connectionString, message: "Connection string 'DB_URI' not found.");
 
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
