@@ -891,6 +891,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "extensionId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },
@@ -904,6 +908,10 @@
           },
           "isActive": {
             "type": "boolean"
+          },
+          "extensionId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },

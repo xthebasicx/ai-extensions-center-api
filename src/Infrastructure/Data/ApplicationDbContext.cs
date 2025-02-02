@@ -18,5 +18,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        Relationships(builder);
+    }
+    private void Relationships(ModelBuilder builder)
+    {
+        builder.Entity<Extension>()
+            .HasMany(e => e.Licenses)
+            .WithOne(e => e.Extension)
+            .HasForeignKey(e => e.ExtensionId)
+            .HasPrincipalKey(e => e.Id);
     }
 }

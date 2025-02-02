@@ -7,6 +7,7 @@ public record CreateLicenseCommand : IRequest<Guid>
 {
     public DateTime ExpirationDate { get; init; }
     public bool IsActive { get; init; }
+    public Guid ExtensionId { get; init; }
 }
 
 public class CreateLicenseCommandValidator : AbstractValidator<CreateLicenseCommand>
@@ -36,6 +37,7 @@ public class CreateLicenseCommandHandler : IRequestHandler<CreateLicenseCommand,
             LicenseKey = Guid.NewGuid().ToString(),
             ExpirationDate = request.ExpirationDate,
             IsActive = request.IsActive,
+            ExtensionId = request.ExtensionId
         };
 
         _context.Licenses.Add(license);

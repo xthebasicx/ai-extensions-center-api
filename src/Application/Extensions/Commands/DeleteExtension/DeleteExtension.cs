@@ -38,8 +38,6 @@ public class DeleteExtensionCommandHandler : IRequestHandler<DeleteExtensionComm
             await _fileStorage.DeleteFileAsync(extension.ImageUrl);
         }
 
-        //_context.Licenses.RemoveRange(extension.Licenses);
-
         _context.Extensions.Remove(extension);
         await _context.SaveChangesAsync(cancellationToken);
     }

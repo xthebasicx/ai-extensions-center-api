@@ -8,7 +8,7 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
     public void Configure(EntityTypeBuilder<License> builder)
     {
         builder.Property(l => l.LicenseKey)
-            .HasMaxLength(100)
+            .HasMaxLength(36)
             .IsRequired();
 
         builder.Property(l => l.ExpirationDate)
@@ -18,10 +18,10 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
             .IsUnique();
 
         // Relationships
-        //builder.HasOne(l => l.Extension)
-        //    .WithMany(e => e.Licenses)
-        //    .HasForeignKey(l => l.ExtensionId)
-        //    .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(l => l.Extension)
+            .WithMany(e => e.Licenses)
+            .HasForeignKey(l => l.ExtensionId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         //builder.HasOne(l => l.User)
         //    .WithMany()

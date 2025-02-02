@@ -6,7 +6,7 @@ public class Extension : BaseAuditableEntity
     public string? ImageUrl { get; set; }
 
     // Relationships
+    public ICollection<License> Licenses { get; set; } = null!;
     //public Guid UserId { get; set; }
     //public ApplicationUser User { get; set; } = null!;
-    //public List<License> Licenses { get; set; } = new();
 }

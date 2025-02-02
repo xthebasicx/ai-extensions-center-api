@@ -12,7 +12,7 @@ public class ExtensionConfiguration : IEntityTypeConfiguration<Extension>
             .IsRequired();
 
         builder.Property(e => e.Description)
-            .HasMaxLength(200);
+            .HasMaxLength(150);
 
         builder.Property(e => e.ImageUrl)
             .HasMaxLength(150);

@@ -16,10 +16,10 @@ public class CreateExtensionCommandValidator : AbstractValidator<CreateExtension
     {
         RuleFor(x => x.ExtensionName)
             .NotEmpty().WithMessage("Extension name is required")
-            .MaximumLength(50).WithMessage("Name cannot exceed 100 characters");
+            .MaximumLength(50).WithMessage("Name cannot exceed 50 characters");
 
         RuleFor(x => x.Description)
-            .MaximumLength(200).WithMessage("Description cannot exceed 500 characters");
+            .MaximumLength(150).WithMessage("Description cannot exceed 150 characters");
 
         //RuleFor(x => x.UserId)
         //    .NotEmpty().WithMessage("User ID is required");

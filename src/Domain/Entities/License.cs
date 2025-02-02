@@ -7,8 +7,8 @@ public class License : BaseAuditableEntity
     public bool IsActive { get; set; }
 
     // Relationships
-    //public Guid ExtensionId { get; set; }
-    //public Extension Extension { get; set; } = null!;
+    public Guid ExtensionId { get; set; }
+    public Extension Extension { get; set; } = null!;
     //public string? UserId { get; set; }
     //public ApplicationUser? User { get; set; }
 }

@@ -6,4 +6,5 @@ public class LicenseVM
     public DateTime ActivationDate { get; init; }
     public DateTime ExpirationDate { get; init; }
     public bool IsActive { get; init; }
+    public Guid ExtensionId { get; init; }
 }

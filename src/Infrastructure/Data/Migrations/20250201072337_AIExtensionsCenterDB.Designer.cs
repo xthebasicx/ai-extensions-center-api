@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250131121908_AIExtensionsCenterDB")]
+    [Migration("20250201072337_AIExtensionsCenterDB")]
     partial class AIExtensionsCenterDB
     {
         /// <inheritdoc />
@@ -38,8 +38,8 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("ExtensionName")
                         .IsRequired()
@@ -82,6 +82,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("ExtensionId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -93,10 +96,12 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 
                     b.Property<string>("LicenseKey")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(36)
+                        .HasColumnType("nvarchar(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ExtensionId");
 
                     b.HasIndex("LicenseKey")
                         .IsUnique();
@@ -302,6 +307,17 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AIExtensionsCenter.Domain.Entities.License", b =>
+                {
+                    b.HasOne("AIExtensionsCenter.Domain.Entities.Extension", "Extension")
+                        .WithMany("Licenses")
+                        .HasForeignKey("ExtensionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Extension");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -351,6 +367,11 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AIExtensionsCenter.Domain.Entities.Extension", b =>
+                {
+                    b.Navigation("Licenses");
                 });
 #pragma warning restore 612, 618
         }
