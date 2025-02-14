@@ -30,6 +30,7 @@ else
 }
 
 app.UseHealthChecks("/health");
+app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
