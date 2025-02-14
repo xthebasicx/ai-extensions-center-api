@@ -14,7 +14,7 @@ public class Extensions : EndpointGroupBase
     public override void Map(WebApplication app)
     {
         app.MapGroup(this)
-        //.RequireAuthorization()
+            .RequireAuthorization()
             .MapGet(GetExtensionWithPagination)
             .MapGet(GetExtensionById, "{id}")
             .MapPost(CreateExtension)

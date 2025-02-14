@@ -13,6 +13,7 @@ public class Licenses : EndpointGroupBase
     public override void Map(WebApplication app)
     {
         app.MapGroup(this)
+            .RequireAuthorization()
             .MapGet(GetLicenseWithPagination)
             .MapGet(GetLicenseById, "{id}")
             .MapPost(CreateLicense)
