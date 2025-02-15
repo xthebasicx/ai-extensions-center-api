@@ -32,7 +32,7 @@ public class GetLicenseByIdQueryHandler : IRequestHandler<GetLicenseByIdQuery, L
     public async Task<LicenseVM> Handle(GetLicenseByIdQuery request, CancellationToken cancellationToken)
     {
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        Guard.Against.NotFound(request.Id,license);
+        Guard.Against.NotFound(request.Id, license);
 
         return _mapper.Map<LicenseVM>(license);
     }

@@ -13,7 +13,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static void AddInfrastructureServices(this IHostApplicationBuilder builder,IConfiguration configuration)
+    public static void AddInfrastructureServices(this IHostApplicationBuilder builder, IConfiguration configuration)
     {
         var connectionString = configuration["DB_URI"];
         Guard.Against.Null(connectionString, message: "Connection string 'DB_URI' not found.");
@@ -33,8 +33,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
 
         builder.Services
-            .AddAuthentication(IdentityConstants.ApplicationScheme)
-            .AddCookie(IdentityConstants.ApplicationScheme)
+            .AddAuthentication()
             .AddBearerToken(IdentityConstants.BearerScheme);
 
         builder.Services.AddAuthorizationBuilder();

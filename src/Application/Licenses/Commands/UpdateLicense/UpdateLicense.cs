@@ -35,7 +35,7 @@ public class UpdateLicenseCommandHandler : IRequestHandler<UpdateLicenseCommand>
 
     public async Task Handle(UpdateLicenseCommand request, CancellationToken cancellationToken)
     {
-        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id,cancellationToken);
+        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
 
         license.ActivationDate = request.ActivationDate;
