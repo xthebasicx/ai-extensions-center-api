@@ -6,6 +6,7 @@ using AIExtensionsCenter.Application.Extensions.Commands.UpdateExtension;
 using AIExtensionsCenter.Application.Extensions.Commands.UploadExtensionImage;
 using AIExtensionsCenter.Application.Extensions.Queries.GetExtension;
 using AIExtensionsCenter.Application.Extensions.Queries.GetExtensionById;
+using AIExtensionsCenter.Application.Extensions.Queries.GetExtensionByUserId;
 using MediatR;
 
 namespace AIExtensionsCenter.Web.Endpoints;
@@ -16,6 +17,7 @@ public class Extensions : EndpointGroupBase
         app.MapGroup(this)
             .RequireAuthorization()
             .MapGet(GetExtensionWithPagination)
+            .MapGet(GetExtensionByUserId, "user")
             .MapGet(GetExtensionById, "{id}")
             .MapPost(CreateExtension)
             .MapPut(UpdateExtension, "{id}")
@@ -24,6 +26,10 @@ public class Extensions : EndpointGroupBase
 
     }
     private Task<PaginatedList<ExtensionVM>> GetExtensionWithPagination(ISender sender, [AsParameters] GetExtensionQuery query)
+    {
+        return sender.Send(query);
+    }
+    private Task<PaginatedList<ExtensionVM>> GetExtensionByUserId(ISender sender, [AsParameters] GetExtensionByUserIdQuery query)
     {
         return sender.Send(query);
     }
