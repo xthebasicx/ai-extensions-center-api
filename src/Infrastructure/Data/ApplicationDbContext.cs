@@ -27,5 +27,10 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
             .WithOne(e => e.Extension)
             .HasForeignKey(e => e.ExtensionId)
             .HasPrincipalKey(e => e.Id);
+
+        builder.Entity<Extension>()
+            .HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId);
     }
 }

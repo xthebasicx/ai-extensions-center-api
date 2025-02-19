@@ -53,10 +53,16 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExtensionName")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Extensions");
                 });
@@ -302,6 +308,15 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AIExtensionsCenter.Domain.Entities.Extension", b =>
+                {
+                    b.HasOne("AIExtensionsCenter.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AIExtensionsCenter.Domain.Entities.License", b =>

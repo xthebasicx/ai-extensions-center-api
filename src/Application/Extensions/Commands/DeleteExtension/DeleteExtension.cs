@@ -1,4 +1,5 @@
-﻿using AIExtensionsCenter.Application.Common.Interfaces;
+﻿using AIExtensionsCenter.Application.Common.Exceptions;
+using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
 using Ardalis.GuardClauses;
 
@@ -21,17 +22,22 @@ public class DeleteExtensionCommandHandler : IRequestHandler<DeleteExtensionComm
 {
     private readonly IApplicationDbContext _context;
     private readonly IFileStorageService _fileStorage;
+    private readonly IUser _user;
 
-    public DeleteExtensionCommandHandler(IApplicationDbContext context, IFileStorageService fileStorage)
+    public DeleteExtensionCommandHandler(IApplicationDbContext context, IFileStorageService fileStorage, IUser user)
     {
         _context = context;
         _fileStorage = fileStorage;
+        _user = user;
     }
 
     public async Task Handle(DeleteExtensionCommand request, CancellationToken cancellationToken)
     {
         Extension? extension = await _context.Extensions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, extension);
+
+        if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
+
 
         if (!string.IsNullOrEmpty(extension.ImageUrl))
         {

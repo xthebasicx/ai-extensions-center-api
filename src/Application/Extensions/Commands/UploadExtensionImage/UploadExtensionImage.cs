@@ -1,4 +1,5 @@
-﻿using AIExtensionsCenter.Application.Common.Interfaces;
+﻿using AIExtensionsCenter.Application.Common.Exceptions;
+using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
 using Ardalis.GuardClauses;
 using Microsoft.AspNetCore.Http;
@@ -24,17 +25,21 @@ public class UploadExtensionImageCommandHandler : IRequestHandler<UploadExtensio
 {
     private readonly IApplicationDbContext _context;
     private readonly IFileStorageService _fileStorage;
+    private readonly IUser _user;
 
-    public UploadExtensionImageCommandHandler(IApplicationDbContext context, IFileStorageService fileStorage)
+    public UploadExtensionImageCommandHandler(IApplicationDbContext context, IFileStorageService fileStorage, IUser user)
     {
         _context = context;
         _fileStorage = fileStorage;
+        _user = user;
     }
 
     public async Task<string> Handle(UploadExtensionImageCommand request, CancellationToken cancellationToken)
     {
         Extension? extension = await _context.Extensions.FirstOrDefaultAsync(x => x.Id == request.ExtensionId, cancellationToken);
         Guard.Against.NotFound(request.ExtensionId, extension);
+
+        if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
 
         if (!string.IsNullOrEmpty(extension.ImageUrl))
         {

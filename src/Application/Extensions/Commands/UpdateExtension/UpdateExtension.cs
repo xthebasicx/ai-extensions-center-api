@@ -1,4 +1,5 @@
-﻿using AIExtensionsCenter.Application.Common.Interfaces;
+﻿using AIExtensionsCenter.Application.Common.Exceptions;
+using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
 using Ardalis.GuardClauses;
 
@@ -30,16 +31,20 @@ public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtension
 public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IUser _user;
 
-    public UpdateExtensionCommandHandler(IApplicationDbContext context)
+    public UpdateExtensionCommandHandler(IApplicationDbContext context, IUser user)
     {
         _context = context;
+        _user = user;
     }
 
     public async Task Handle(UpdateExtensionCommand request, CancellationToken cancellationToken)
     {
         Extension? extension = await _context.Extensions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, extension);
+
+        if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
 
         extension.ExtensionName = request.ExtensionName;
         extension.Description = request.Description;

@@ -50,24 +50,6 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Extensions",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExtensionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Extensions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -174,6 +156,31 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Extensions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ExtensionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Extensions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Extensions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Licenses",
                 columns: table => new
                 {
@@ -245,6 +252,11 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Extensions_UserId",
+                table: "Extensions",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Licenses_ExtensionId",
                 table: "Licenses",
                 column: "ExtensionId");
@@ -281,10 +293,10 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Extensions");
 
             migrationBuilder.DropTable(
-                name: "Extensions");
+                name: "AspNetUsers");
         }
     }
 }

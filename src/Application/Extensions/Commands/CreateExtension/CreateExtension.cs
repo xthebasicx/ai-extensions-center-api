@@ -20,28 +20,29 @@ public class CreateExtensionCommandValidator : AbstractValidator<CreateExtension
 
         RuleFor(x => x.Description)
             .MaximumLength(150).WithMessage("Description cannot exceed 150 characters");
-
-        //RuleFor(x => x.UserId)
-        //    .NotEmpty().WithMessage("User ID is required");
     }
 }
 
 public class CreateExtensionCommandHandler : IRequestHandler<CreateExtensionCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IUser _user;
 
-    public CreateExtensionCommandHandler(IApplicationDbContext context)
+    public CreateExtensionCommandHandler(IApplicationDbContext context, IUser user)
     {
         _context = context;
+        _user = user;
     }
 
     public async Task<Guid> Handle(CreateExtensionCommand request, CancellationToken cancellationToken)
     {
+        var userId = _user.Id ?? throw new UnauthorizedAccessException();
+
         Extension extension = new()
         {
             ExtensionName = request.ExtensionName,
             Description = request.Description,
-            //UserId = request.UserId
+            UserId = userId
         };
 
         _context.Extensions.Add(extension);
