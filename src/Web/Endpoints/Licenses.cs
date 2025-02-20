@@ -5,6 +5,7 @@ using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.UpdateLicense;
 using AIExtensionsCenter.Application.Licenses.Queries.GetLicense;
+using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseByExtensionId;
 using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseById;
 using MediatR;
 
@@ -17,6 +18,7 @@ public class Licenses : EndpointGroupBase
         app.MapGroup(this)
             .RequireAuthorization()
             .MapGet(GetLicenseWithPagination)
+            .MapGet(GetLicenseByExtensionId, "/extension")
             .MapGet(GetLicenseById, "{id}")
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
@@ -25,6 +27,10 @@ public class Licenses : EndpointGroupBase
             .MapPost(DeActivateLicense, "{id}/deactivate");
     }
     private Task<PaginatedList<LicenseVM>> GetLicenseWithPagination(ISender sender, [AsParameters] GetLicenseQuery query)
+    {
+        return sender.Send(query);
+    }
+    private Task<PaginatedList<LicenseVM>> GetLicenseByExtensionId(ISender sender, [AsParameters] GetLicenseByExtensionIdQuery query)
     {
         return sender.Send(query);
     }
