@@ -6,7 +6,6 @@ namespace AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 public record CreateLicenseCommand : IRequest<Guid>
 {
     public DateTime ExpirationDate { get; init; }
-    public bool IsActive { get; init; }
     public Guid ExtensionId { get; init; }
 }
 
@@ -14,7 +13,8 @@ public class CreateLicenseCommandValidator : AbstractValidator<CreateLicenseComm
 {
     public CreateLicenseCommandValidator()
     {
-        //RuleFor(x => x.ExtensionId).NotEmpty();
+        RuleFor(x => x.ExtensionId).NotEmpty();
+
         RuleFor(x => x.ExpirationDate)
             .GreaterThan(DateTime.UtcNow.AddDays(1))
             .WithMessage("Expiration date must be at least 1 day in the future");
@@ -32,11 +32,12 @@ public class CreateLicenseCommandHandler : IRequestHandler<CreateLicenseCommand,
 
     public async Task<Guid> Handle(CreateLicenseCommand request, CancellationToken cancellationToken)
     {
+        var licensekey = Guid.NewGuid().ToString();
+
         License? license = new()
         {
-            LicenseKey = Guid.NewGuid().ToString(),
+            LicenseKey = licensekey,
             ExpirationDate = request.ExpirationDate,
-            IsActive = request.IsActive,
             ExtensionId = request.ExtensionId
         };
 

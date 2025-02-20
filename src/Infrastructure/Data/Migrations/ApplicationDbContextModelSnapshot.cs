@@ -73,6 +73,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("ActivatedByUserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("ActivationDate")
                         .HasColumnType("datetime2");
 

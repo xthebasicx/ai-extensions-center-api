@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250215114530_AIExtensionsCenterDB")]
+    [Migration("20250220093232_AIExtensionsCenterDB")]
     partial class AIExtensionsCenterDB
     {
         /// <inheritdoc />
@@ -75,6 +75,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ActivatedByUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ActivationDate")
                         .HasColumnType("datetime2");

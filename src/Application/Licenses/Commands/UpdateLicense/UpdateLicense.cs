@@ -7,9 +7,8 @@ namespace AIExtensionsCenter.Application.Licenses.Commands.UpdateLicense;
 public record UpdateLicenseCommand : IRequest
 {
     public Guid Id { get; init; }
-    public DateTime ActivationDate { get; init; }
     public DateTime ExpirationDate { get; init; }
-    public bool IsActive { get; init; }
+
 }
 
 public class UpdateLicenseCommandValidator : AbstractValidator<UpdateLicenseCommand>
@@ -38,9 +37,7 @@ public class UpdateLicenseCommandHandler : IRequestHandler<UpdateLicenseCommand>
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
 
-        license.ActivationDate = request.ActivationDate;
         license.ExpirationDate = request.ExpirationDate;
-        license.IsActive = request.IsActive;
 
         _context.Licenses.Update(license);
         await _context.SaveChangesAsync(cancellationToken);

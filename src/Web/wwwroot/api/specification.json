@@ -461,6 +461,48 @@
         ]
       }
     },
+    "/api/Licenses/{id}/activate": {
+      "post": {
+        "tags": [
+          "Licenses"
+        ],
+        "operationId": "ActivateLicense",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Users/register": {
       "post": {
         "tags": [
@@ -1008,9 +1050,6 @@
             "type": "string",
             "format": "date-time"
           },
-          "isActive": {
-            "type": "boolean"
-          },
           "extensionId": {
             "type": "string",
             "format": "guid"
@@ -1025,16 +1064,22 @@
             "type": "string",
             "format": "guid"
           },
-          "activationDate": {
-            "type": "string",
-            "format": "date-time"
-          },
           "expirationDate": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ActivateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
           },
-          "isActive": {
-            "type": "boolean"
+          "licenseKey": {
+            "type": "string"
           }
         }
       },
