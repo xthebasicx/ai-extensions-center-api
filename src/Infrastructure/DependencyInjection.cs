@@ -3,6 +3,7 @@ using AIExtensionsCenter.Domain.Constants;
 using AIExtensionsCenter.Infrastructure.Data;
 using AIExtensionsCenter.Infrastructure.Data.Interceptors;
 using AIExtensionsCenter.Infrastructure.Identity;
+using AIExtensionsCenter.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -20,6 +21,7 @@ public static class DependencyInjection
 
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
