@@ -6,6 +6,87 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/APIKeys/user": {
+      "get": {
+        "tags": [
+          "APIKeys"
+        ],
+        "operationId": "GetAPIKeyByUserID",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APIKeyVM"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/APIKeys": {
+      "post": {
+        "tags": [
+          "APIKeys"
+        ],
+        "operationId": "CreateAPIKey",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/APIKeys/{id}": {
+      "delete": {
+        "tags": [
+          "APIKeys"
+        ],
+        "operationId": "DeleteAPIKey",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
     "/api/Extensions": {
       "get": {
         "tags": [
@@ -999,6 +1080,21 @@
   },
   "components": {
     "schemas": {
+      "APIKeyVM": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "PaginatedListOfExtensionVM": {
         "type": "object",
         "additionalProperties": false,
