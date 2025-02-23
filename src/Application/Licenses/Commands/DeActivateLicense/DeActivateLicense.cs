@@ -1,5 +1,6 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
+using AIExtensionsCenter.Domain.Enums;
 using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
@@ -32,9 +33,16 @@ public class DeActivateLicenseCommandHandler : IRequestHandler<DeActivateLicense
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id);
         Guard.Against.NotFound(request.Id, license);
 
-        if (license.IsActive == false) throw new ValidationException("license is not active");
+        if (license.LicenseStatus != LicenseStatus.Active) throw new ValidationException("License is not active");
 
-        license.IsActive = false;
+        if (license.ExpirationDate < DateTime.UtcNow)
+        {
+            license.LicenseStatus = LicenseStatus.Expired;
+            await _context.SaveChangesAsync(cancellationToken);
+            throw new ValidationException("License has expired.");
+        }
+
+        license.LicenseStatus = LicenseStatus.Revoked;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

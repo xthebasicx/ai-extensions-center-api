@@ -237,7 +237,14 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExtensionVM"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -361,89 +368,6 @@
         ]
       }
     },
-    "/api/Licenses": {
-      "get": {
-        "tags": [
-          "Licenses"
-        ],
-        "operationId": "GetLicenseWithPagination",
-        "parameters": [
-          {
-            "name": "PageNumber",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfLicenseVM"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Licenses"
-        ],
-        "operationId": "CreateLicense",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateLicenseCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "guid"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
     "/api/Licenses/extension": {
       "get": {
         "tags": [
@@ -501,27 +425,35 @@
         ]
       }
     },
-    "/api/Licenses/{id}": {
-      "get": {
+    "/api/Licenses": {
+      "post": {
         "tags": [
           "Licenses"
         ],
-        "operationId": "GetLicenseById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
+        "operationId": "CreateLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -529,7 +461,9 @@
             "JWT": []
           }
         ]
-      },
+      }
+    },
+    "/api/Licenses/{id}": {
       "put": {
         "tags": [
           "Licenses"
@@ -1218,7 +1152,8 @@
             "nullable": true
           },
           "licenseKey": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "activationDate": {
             "type": "string",
@@ -1228,12 +1163,17 @@
             "type": "string",
             "format": "date-time"
           },
-          "isActive": {
-            "type": "boolean"
+          "licenseStatus": {
+            "type": "string",
+            "nullable": true
           },
           "extensionId": {
             "type": "string",
             "format": "guid"
+          },
+          "activatedByUserEmail": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

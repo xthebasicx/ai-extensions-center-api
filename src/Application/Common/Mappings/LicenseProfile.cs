@@ -6,6 +6,7 @@ public class LicenseProfile : Profile
 {
     public LicenseProfile()
     {
-        CreateMap<License, LicenseVM>();
+        CreateMap<License, LicenseVM>()
+            .ForMember(dest => dest.LicenseStatus, opt => opt.MapFrom(src => src.LicenseStatus.ToString()));
     }
 }

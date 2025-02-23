@@ -1,5 +1,6 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
+using AIExtensionsCenter.Domain.Enums;
 using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
@@ -33,15 +34,17 @@ public class ActivateLicenseCommandHandler : IRequestHandler<ActivateLicenseComm
     public async Task Handle(ActivateLicenseCommand request, CancellationToken cancellationToken)
     {
         var userId = _user.Id ?? throw new UnauthorizedAccessException();
+        var userEmail = _user.Email;
 
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
 
         if (license.LicenseKey != request.LicenseKey) throw new ValidationException("License key invalid");
 
-        license.IsActive = true;
         license.ActivationDate = DateTime.UtcNow;
         license.ActivatedByUserId = userId;
+        license.ActivatedByUserEmail = userEmail;
+        license.LicenseStatus = LicenseStatus.Active;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

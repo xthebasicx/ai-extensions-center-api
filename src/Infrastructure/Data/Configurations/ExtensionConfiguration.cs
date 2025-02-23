@@ -1,4 +1,5 @@
 ﻿using AIExtensionsCenter.Domain.Entities;
+using AIExtensionsCenter.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,12 +18,21 @@ public class ExtensionConfiguration : IEntityTypeConfiguration<Extension>
         builder.Property(e => e.ImageUrl)
             .HasMaxLength(150);
 
+        builder.Property(e => e.UserId)
+            .IsRequired();
+
         builder.HasIndex(e => e.ExtensionName)
             .IsUnique();
 
-        // Relationship Configuration
-        //builder.HasOne(e => e.User)
-        //    .WithMany(u => u.Extensions)
-        //    .HasForeignKey(e => e.UserId);
+        // Relationships
+        builder.HasMany(e => e.Licenses)
+            .WithOne(l => l.Extension)
+            .HasForeignKey(l => l.ExtensionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne<ApplicationUser>()
+            .WithMany()
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

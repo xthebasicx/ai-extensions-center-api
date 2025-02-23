@@ -2,9 +2,10 @@
 public class LicenseVM
 {
     public Guid? Id { get; init; }
-    public string LicenseKey { get; init; } = null!;
+    public string? LicenseKey { get; init; }
     public DateTime ActivationDate { get; init; }
     public DateTime ExpirationDate { get; init; }
-    public bool IsActive { get; init; }
+    public string? LicenseStatus { get; init; }
     public Guid ExtensionId { get; init; }
+    public string? ActivatedByUserEmail { get; set; }
 }

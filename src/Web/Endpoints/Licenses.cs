@@ -4,9 +4,7 @@ using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.UpdateLicense;
-using AIExtensionsCenter.Application.Licenses.Queries.GetLicense;
 using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseByExtensionId;
-using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseById;
 using MediatR;
 
 namespace AIExtensionsCenter.Web.Endpoints;
@@ -17,27 +15,16 @@ public class Licenses : EndpointGroupBase
     {
         app.MapGroup(this)
             .RequireAuthorization()
-            .MapGet(GetLicenseWithPagination)
             .MapGet(GetLicenseByExtensionId, "/extension")
-            .MapGet(GetLicenseById, "{id}")
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
             .MapDelete(DeleteLicense, "{id}")
             .MapPost(ActivateLicense, "{id}/activate")
             .MapPost(DeActivateLicense, "{id}/deactivate");
     }
-    private Task<PaginatedList<LicenseVM>> GetLicenseWithPagination(ISender sender, [AsParameters] GetLicenseQuery query)
-    {
-        return sender.Send(query);
-    }
     private Task<PaginatedList<LicenseVM>> GetLicenseByExtensionId(ISender sender, [AsParameters] GetLicenseByExtensionIdQuery query)
     {
         return sender.Send(query);
-    }
-    private async Task<IResult> GetLicenseById(ISender sender, Guid id)
-    {
-        var result = await sender.Send(new GetLicenseByIdQuery(id));
-        return Results.Ok(result);
     }
     private Task<Guid> CreateLicense(ISender sender, CreateLicenseCommand command)
     {

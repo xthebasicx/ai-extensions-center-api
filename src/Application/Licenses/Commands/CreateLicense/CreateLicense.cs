@@ -24,20 +24,24 @@ public class CreateLicenseCommandValidator : AbstractValidator<CreateLicenseComm
 public class CreateLicenseCommandHandler : IRequestHandler<CreateLicenseCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IUser _user;
 
-    public CreateLicenseCommandHandler(IApplicationDbContext context)
+    public CreateLicenseCommandHandler(IApplicationDbContext context, IUser user)
     {
         _context = context;
+        _user = user;
     }
 
     public async Task<Guid> Handle(CreateLicenseCommand request, CancellationToken cancellationToken)
     {
+        var userId = _user.Id ?? throw new UnauthorizedAccessException();
         var licensekey = Guid.NewGuid().ToString();
 
         License? license = new()
         {
             LicenseKey = licensekey,
             ExpirationDate = request.ExpirationDate,
+            UserId = userId,
             ExtensionId = request.ExtensionId
         };
 

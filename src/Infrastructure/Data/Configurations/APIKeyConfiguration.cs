@@ -3,23 +3,21 @@ using AIExtensionsCenter.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AIExtensionsCenter.Infrastructure.Data.Configurations
+namespace AIExtensionsCenter.Infrastructure.Data.Configurations;
+public class APIKeyConfiguration : IEntityTypeConfiguration<APIKey>
 {
-    public class APIKeyConfiguration : IEntityTypeConfiguration<APIKey>
+    public void Configure(EntityTypeBuilder<APIKey> builder)
     {
-        public void Configure(EntityTypeBuilder<APIKey> builder)
-        {
-            builder.Property(a => a.Key)
-                .HasMaxLength(36)
-                .IsRequired();
+        builder.Property(a => a.Key)
+            .HasMaxLength(36)
+            .IsRequired();
 
-            builder.Property(a => a.UserId)
-                .IsRequired();
+        builder.Property(a => a.UserId)
+            .IsRequired();
 
-            builder.HasOne<ApplicationUser>()
-                .WithOne()
-                .HasForeignKey<APIKey>(a => a.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-        }
+        builder.HasOne<ApplicationUser>()
+            .WithOne()
+            .HasForeignKey<APIKey>(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

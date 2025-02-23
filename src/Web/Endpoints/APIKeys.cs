@@ -18,13 +18,11 @@ public class APIKeys : EndpointGroupBase
     }
     private Task<APIKeyVM> GetAPIKeyByUserID(ISender sender)
     {
-        var query = new GetAPIKeyByUserIdQuery();
-        return sender.Send(query);
+         return sender.Send(new GetAPIKeyByUserIdQuery());
     }
     private Task<Guid> CreateAPIKey(ISender sender)
     {
-        var command = new CreateAPIKeyCommand();
-        return sender.Send(command);
+        return sender.Send(new CreateAPIKeyCommand());
     }
     private async Task<IResult> DeleteAPIKey(ISender sender, Guid id)
     {

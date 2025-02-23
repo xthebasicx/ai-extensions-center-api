@@ -33,10 +33,9 @@ public class Extensions : EndpointGroupBase
     {
         return sender.Send(query);
     }
-    private async Task<IResult> GetExtensionById(ISender sender, Guid id)
+    private Task<ExtensionVM> GetExtensionById(ISender sender, Guid id)
     {
-        var result = await sender.Send(new GetExtensionByIdQuery(id));
-        return Results.Ok(result);
+        return sender.Send(new GetExtensionByIdQuery(id));
     }
     private Task<Guid> CreateExtension(ISender sender, CreateExtensionCommand command)
     {
@@ -57,6 +56,6 @@ public class Extensions : EndpointGroupBase
     {
         var command = new UploadExtensionImageCommand(id, file);
         var result = await sender.Send(command);
-        return TypedResults.Ok(new { ImageUrl = result });
+        return Results.Ok(new { ImageUrl = result });
     }
 }

@@ -24,7 +24,7 @@ public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtension
             .MaximumLength(50).WithMessage("Name cannot exceed 100 characters");
 
         RuleFor(x => x.Description)
-            .MaximumLength(200).WithMessage("Description cannot exceed 500 characters");
+            .MaximumLength(150).WithMessage("Description cannot exceed 500 characters");
     }
 }
 
