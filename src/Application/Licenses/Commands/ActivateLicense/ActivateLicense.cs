@@ -7,7 +7,6 @@ namespace AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
 
 public record ActivateLicenseCommand : IRequest
 {
-    public Guid Id { get; init; }
     public string LicenseKey { get; init; } = null!;
 }
 
@@ -15,8 +14,6 @@ public class ActivateLicenseCommandValidator : AbstractValidator<ActivateLicense
 {
     public ActivateLicenseCommandValidator()
     {
-        RuleFor(x => x.Id)
-            .NotEmpty();
     }
 }
 
@@ -36,10 +33,10 @@ public class ActivateLicenseCommandHandler : IRequestHandler<ActivateLicenseComm
         var userId = _user.Id ?? throw new UnauthorizedAccessException();
         var userEmail = _user.Email;
 
-        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
-        Guard.Against.NotFound(request.Id, license);
+        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == request.LicenseKey, cancellationToken);
+        Guard.Against.NotFound(request.LicenseKey, license);
 
-        if (license.LicenseKey != request.LicenseKey) throw new ValidationException("License key invalid");
+        if (license.LicenseStatus != LicenseStatus.InActive) throw new ValidationException("License key invalid");
 
         license.ActivationDate = DateTime.UtcNow;
         license.ActivatedByUserId = userId;

@@ -8,7 +8,7 @@ public class ExtensionConfiguration : IEntityTypeConfiguration<Extension>
 {
     public void Configure(EntityTypeBuilder<Extension> builder)
     {
-        builder.Property(e => e.ExtensionName)
+        builder.Property(e => e.Name)
             .HasMaxLength(50)
             .IsRequired();
 
@@ -21,7 +21,7 @@ public class ExtensionConfiguration : IEntityTypeConfiguration<Extension>
         builder.Property(e => e.UserId)
             .IsRequired();
 
-        builder.HasIndex(e => e.ExtensionName)
+        builder.HasIndex(e => e.Name)
             .IsUnique();
 
         // Relationships

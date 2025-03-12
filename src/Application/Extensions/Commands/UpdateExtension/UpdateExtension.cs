@@ -8,7 +8,7 @@ namespace AIExtensionsCenter.Application.Extensions.Commands.UpdateExtension;
 public record UpdateExtensionCommand : IRequest
 {
     public Guid Id { get; init; }
-    public string ExtensionName { get; init; } = null!;
+    public string Name { get; init; } = null!;
     public string? Description { get; init; }
 }
 
@@ -19,7 +19,7 @@ public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtension
         RuleFor(x => x.Id)
             .NotEmpty().WithMessage("ID is required");
 
-        RuleFor(x => x.ExtensionName)
+        RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Extension name is required")
             .MaximumLength(50).WithMessage("Name cannot exceed 100 characters");
 
@@ -46,7 +46,7 @@ public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionComm
 
         if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
 
-        extension.ExtensionName = request.ExtensionName;
+        extension.Name = request.Name;
         extension.Description = request.Description;
 
         _context.Extensions.Update(extension);

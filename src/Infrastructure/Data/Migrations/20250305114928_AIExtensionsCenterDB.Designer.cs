@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250223085759_AIExtensionsCenterDB")]
+    [Migration("20250305114928_AIExtensionsCenterDB")]
     partial class AIExtensionsCenterDB
     {
         /// <inheritdoc />
@@ -76,11 +76,6 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("ExtensionName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
@@ -91,13 +86,18 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExtensionName")
+                    b.HasIndex("Name")
                         .IsUnique();
 
                     b.HasIndex("UserId");

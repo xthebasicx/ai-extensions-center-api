@@ -1,5 +1,6 @@
 ﻿using AIExtensionsCenter.Application.Common.Models;
 using AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
+using AIExtensionsCenter.Application.Licenses.Commands.CheckLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
@@ -15,16 +16,17 @@ public class Licenses : EndpointGroupBase
     {
         app.MapGroup(this)
             .RequireAuthorization()
-            .MapGet(GetLicenseByExtensionId, "/extension")
+            .MapGet(GetLicenseByExtensionId, "extension/{id}")
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
             .MapDelete(DeleteLicense, "{id}")
-            .MapPost(ActivateLicense, "{id}/activate")
-            .MapPost(DeActivateLicense, "{id}/deactivate");
+            .MapPost(ActivateLicense, "activate")
+            .MapPost(DeActivateLicense, "{id}/deactivate")
+            .MapPut(CheckLicense,"checklicense");
     }
-    private Task<PaginatedList<LicenseVM>> GetLicenseByExtensionId(ISender sender, [AsParameters] GetLicenseByExtensionIdQuery query)
+    private Task<List<LicenseVM>> GetLicenseByExtensionId(ISender sender, Guid id)
     {
-        return sender.Send(query);
+        return sender.Send(new GetLicenseByExtensionIdQuery(id));
     }
     private Task<Guid> CreateLicense(ISender sender, CreateLicenseCommand command)
     {
@@ -41,9 +43,8 @@ public class Licenses : EndpointGroupBase
         await sender.Send(new DeleteLicenseCommand(id));
         return Results.NoContent();
     }
-    private async Task<IResult> ActivateLicense(ISender sender, Guid id, ActivateLicenseCommand command)
+    private async Task<IResult> ActivateLicense(ISender sender, ActivateLicenseCommand command)
     {
-        if (id != command.Id) return Results.BadRequest("The provided ID does not match the command ID.");
         await sender.Send(command);
         return Results.NoContent();
     }
@@ -52,5 +53,10 @@ public class Licenses : EndpointGroupBase
         if (id != command.Id) return Results.BadRequest("The provided ID does not match the command ID.");
         await sender.Send(command);
         return Results.NoContent();
+    }
+    private async Task<IResult> CheckLicense(ISender sender, CheckLicenseCommand command)
+    {
+        await sender.Send(command);
+        return Results.Ok();
     }
 }

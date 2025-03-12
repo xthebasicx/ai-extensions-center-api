@@ -5,7 +5,7 @@ namespace AIExtensionsCenter.Application.Extensions.Commands.CreateExtension;
 
 public record CreateExtensionCommand : IRequest<Guid>
 {
-    public string ExtensionName { get; init; } = null!;
+    public string Name { get; init; } = null!;
     public string? Description { get; init; }
 
 }
@@ -14,7 +14,7 @@ public class CreateExtensionCommandValidator : AbstractValidator<CreateExtension
 {
     public CreateExtensionCommandValidator()
     {
-        RuleFor(x => x.ExtensionName)
+        RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Extension name is required")
             .MaximumLength(50).WithMessage("Name cannot exceed 50 characters");
 
@@ -40,7 +40,7 @@ public class CreateExtensionCommandHandler : IRequestHandler<CreateExtensionComm
 
         Extension extension = new()
         {
-            ExtensionName = request.ExtensionName,
+            Name = request.Name,
             Description = request.Description,
             UserId = userId
         };

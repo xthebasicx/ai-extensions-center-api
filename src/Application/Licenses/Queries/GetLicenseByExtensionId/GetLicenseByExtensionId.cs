@@ -1,16 +1,12 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
-using AIExtensionsCenter.Application.Common.Mappings;
 using AIExtensionsCenter.Application.Common.Models;
 using AIExtensionsCenter.Domain.Entities;
 using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Queries.GetLicenseByExtensionId;
 
-public record GetLicenseByExtensionIdQuery : IRequest<PaginatedList<LicenseVM>>
+public record GetLicenseByExtensionIdQuery(Guid Id) : IRequest<List<LicenseVM>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
-    public Guid ExtensionId { get; init; }
 }
 
 public class GetLicenseByExtensionIdQueryValidator : AbstractValidator<GetLicenseByExtensionIdQuery>
@@ -20,7 +16,7 @@ public class GetLicenseByExtensionIdQueryValidator : AbstractValidator<GetLicens
     }
 }
 
-public class GetLicenseByExtensionIdQueryHandler : IRequestHandler<GetLicenseByExtensionIdQuery, PaginatedList<LicenseVM>>
+public class GetLicenseByExtensionIdQueryHandler : IRequestHandler<GetLicenseByExtensionIdQuery, List<LicenseVM>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -31,14 +27,13 @@ public class GetLicenseByExtensionIdQueryHandler : IRequestHandler<GetLicenseByE
         _mapper = mapper;
     }
 
-    public async Task<PaginatedList<LicenseVM>> Handle(GetLicenseByExtensionIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<LicenseVM>> Handle(GetLicenseByExtensionIdQuery request, CancellationToken cancellationToken)
     {
-        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.ExtensionId == request.ExtensionId, cancellationToken);
-        Guard.Against.NotFound(request.ExtensionId, license);
+        List<License> licenses = await _context.Licenses
+            .Where(x => x.ExtensionId == request.Id)
+            .ToListAsync(cancellationToken);
+        Guard.Against.NotFound(request.Id, licenses);
 
-        return await _context.Licenses
-            .Where(l => l.ExtensionId == request.ExtensionId)
-            .ProjectTo<LicenseVM>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(request.PageNumber, request.PageSize);
+        return _mapper.Map<List<LicenseVM>>(licenses);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -183,7 +184,7 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExtensionName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: true),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -283,9 +284,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Extensions_ExtensionName",
+                name: "IX_Extensions_Name",
                 table: "Extensions",
-                column: "ExtensionName",
+                column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(

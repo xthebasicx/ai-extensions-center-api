@@ -368,7 +368,7 @@
         ]
       }
     },
-    "/api/Licenses/extension": {
+    "/api/Licenses/extension/{id}": {
       "get": {
         "tags": [
           "Licenses"
@@ -376,34 +376,14 @@
         "operationId": "GetLicenseByExtensionId",
         "parameters": [
           {
-            "name": "PageNumber",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "PageSize",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "ExtensionId",
-            "in": "query",
+            "name": "id",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "guid"
             },
-            "x-position": 3
+            "x-position": 1
           }
         ],
         "responses": {
@@ -412,7 +392,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfLicenseVM"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LicenseVM"
+                  }
                 }
               }
             }
@@ -533,24 +516,12 @@
         ]
       }
     },
-    "/api/Licenses/{id}/activate": {
+    "/api/Licenses/activate": {
       "post": {
         "tags": [
           "Licenses"
         ],
         "operationId": "ActivateLicense",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -561,7 +532,7 @@
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -604,6 +575,36 @@
           },
           "required": true,
           "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Licenses/checklicense": {
+      "put": {
+        "tags": [
+          "Licenses"
+        ],
+        "operationId": "CheckLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -1068,7 +1069,7 @@
             "format": "guid",
             "nullable": true
           },
-          "extensionName": {
+          "name": {
             "type": "string",
             "nullable": true
           },
@@ -1086,7 +1087,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "extensionName": {
+          "name": {
             "type": "string"
           },
           "description": {
@@ -1103,42 +1104,12 @@
             "type": "string",
             "format": "guid"
           },
-          "extensionName": {
+          "name": {
             "type": "string"
           },
           "description": {
             "type": "string",
             "nullable": true
-          }
-        }
-      },
-      "PaginatedListOfLicenseVM": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/LicenseVM"
-            }
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasPreviousPage": {
-            "type": "boolean"
-          },
-          "hasNextPage": {
-            "type": "boolean"
           }
         }
       },
@@ -1209,10 +1180,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
           "licenseKey": {
             "type": "string"
           }
@@ -1223,6 +1190,16 @@
         "additionalProperties": false,
         "properties": {
           "id": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "CheckLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "extensionId": {
             "type": "string",
             "format": "guid"
           }

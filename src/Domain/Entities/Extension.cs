@@ -1,7 +1,7 @@
 ﻿namespace AIExtensionsCenter.Domain.Entities;
 public class Extension : BaseAuditableEntity
 {
-    public string ExtensionName { get; set; } = null!;
+    public string Name { get; set; } = null!;
     public string? Description { get; set; }
     public string? ImageUrl { get; set; }
 
