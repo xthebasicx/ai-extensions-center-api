@@ -33,14 +33,7 @@ public class DeActivateLicenseCommandHandler : IRequestHandler<DeActivateLicense
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id);
         Guard.Against.NotFound(request.Id, license);
 
-        if (license.LicenseStatus != LicenseStatus.Active) throw new ValidationException("License is not active");
-
-        if (license.ExpirationDate < DateTime.UtcNow)
-        {
-            license.LicenseStatus = LicenseStatus.Expired;
-            await _context.SaveChangesAsync(cancellationToken);
-            throw new ValidationException("License has expired.");
-        }
+        if (license.LicenseStatus != LicenseStatus.Active) throw new ValidationException("License invalid");
 
         license.LicenseStatus = LicenseStatus.Revoked;
 

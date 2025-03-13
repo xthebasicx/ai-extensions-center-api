@@ -7,5 +7,6 @@ public class LicenseVM
     public DateTime ExpirationDate { get; init; }
     public string? LicenseStatus { get; init; }
     public Guid ExtensionId { get; init; }
-    public string? ActivatedByUserEmail { get; set; }
+    public string? ActivatedByUserEmail { get; init; }
+    public string? ActivatedMachineId { get; init; }
 }

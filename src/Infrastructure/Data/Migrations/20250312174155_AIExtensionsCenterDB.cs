@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -213,10 +212,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     ActivationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LicenseStatus = table.Column<int>(type: "int", nullable: false),
-                    ExtensionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ActivatedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ActivatedMachineId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     ActivatedByUserEmail = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ExtensionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastModified = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -225,11 +223,6 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Licenses", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Licenses_AspNetUsers_ActivatedByUserId",
-                        column: x => x.ActivatedByUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Licenses_Extensions_ExtensionId",
                         column: x => x.ExtensionId,
@@ -293,11 +286,6 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                 name: "IX_Extensions_UserId",
                 table: "Extensions",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Licenses_ActivatedByUserId",
-                table: "Licenses",
-                column: "ActivatedByUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Licenses_ExtensionId",

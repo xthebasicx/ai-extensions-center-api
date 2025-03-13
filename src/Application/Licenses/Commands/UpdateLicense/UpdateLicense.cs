@@ -1,5 +1,4 @@
-﻿using AIExtensionsCenter.Application.Common.Exceptions;
-using AIExtensionsCenter.Application.Common.Interfaces;
+﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
 using Ardalis.GuardClauses;
 
@@ -19,28 +18,23 @@ public class UpdateLicenseCommandValidator : AbstractValidator<UpdateLicenseComm
         RuleFor(x => x.Id)
             .NotEmpty();
         RuleFor(x => x.ExpirationDate)
-            .GreaterThan(DateTime.UtcNow)
-            .WithMessage("Expiration date must be in the future");
+            .GreaterThan(DateTime.UtcNow);
     }
 }
 
 public class UpdateLicenseCommandHandler : IRequestHandler<UpdateLicenseCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUser _user;
 
-    public UpdateLicenseCommandHandler(IApplicationDbContext context, IUser user)
+    public UpdateLicenseCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _user = user;
     }
 
     public async Task Handle(UpdateLicenseCommand request, CancellationToken cancellationToken)
     {
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
-
-        if (license.UserId != _user.Id) throw new ForbiddenAccessException();
 
         license.ExpirationDate = request.ExpirationDate;
 

@@ -1,6 +1,6 @@
-﻿using AIExtensionsCenter.Application.Common.Exceptions;
-using AIExtensionsCenter.Application.Common.Interfaces;
+﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
+using AIExtensionsCenter.Domain.Enums;
 using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
@@ -20,11 +20,9 @@ public class DeleteLicenseCommandValidator : AbstractValidator<DeleteLicenseComm
 public class DeleteLicenseCommandHandler : IRequestHandler<DeleteLicenseCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUser _user;
     public DeleteLicenseCommandHandler(IApplicationDbContext context, IUser user)
     {
         _context = context;
-        _user = user;
     }
 
     public async Task Handle(DeleteLicenseCommand request, CancellationToken cancellationToken)
@@ -32,7 +30,7 @@ public class DeleteLicenseCommandHandler : IRequestHandler<DeleteLicenseCommand>
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
 
-        if (license.UserId != _user.Id) throw new ForbiddenAccessException();
+        //if (license.LicenseStatus != LicenseStatus.InActive) throw new ValidationException("Can delete only inactive license");
 
         _context.Licenses.Remove(license);
         await _context.SaveChangesAsync(cancellationToken);

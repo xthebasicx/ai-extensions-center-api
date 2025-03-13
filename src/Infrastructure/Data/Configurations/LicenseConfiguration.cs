@@ -1,5 +1,4 @@
 ﻿using AIExtensionsCenter.Domain.Entities;
-using AIExtensionsCenter.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,8 +17,8 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
         builder.Property(l => l.ActivatedByUserEmail)
             .HasMaxLength(50);
 
-        builder.Property(l => l.UserId)
-            .IsRequired();
+        builder.Property(l => l.ActivatedMachineId)
+            .HasMaxLength(50);
 
         builder.HasIndex(l => l.LicenseKey)
             .IsUnique();
@@ -29,10 +28,5 @@ public class LicenseConfiguration : IEntityTypeConfiguration<License>
             .WithMany(e => e.Licenses)
             .HasForeignKey(l => l.ExtensionId)
             .HasPrincipalKey(e => e.Id);
-
-        builder.HasOne<ApplicationUser>()
-            .WithMany()
-            .HasForeignKey(l => l.ActivatedByUserId);
     }
 }
-

@@ -1,5 +1,4 @@
-﻿
-using AIExtensionsCenter.Application.APIKeys.Commands.CreateAPIKey;
+﻿using AIExtensionsCenter.Application.APIKeys.Commands.CreateAPIKey;
 using AIExtensionsCenter.Application.APIKeys.Commands.DeleteAPIKey;
 using AIExtensionsCenter.Application.APIKeys.Queries.GetAPIKeyByUserId;
 using AIExtensionsCenter.Application.Common.Models;
@@ -18,7 +17,7 @@ public class APIKeys : EndpointGroupBase
     }
     private Task<APIKeyVM> GetAPIKeyByUserID(ISender sender)
     {
-         return sender.Send(new GetAPIKeyByUserIdQuery());
+        return sender.Send(new GetAPIKeyByUserIdQuery());
     }
     private Task<Guid> CreateAPIKey(ISender sender)
     {

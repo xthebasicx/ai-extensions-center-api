@@ -8,40 +8,43 @@ namespace AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
 public record ActivateLicenseCommand : IRequest
 {
     public string LicenseKey { get; init; } = null!;
+    public string? ActivatedByUserEmail { get; init; }
+    public string? ActivatedMachineId { get; init; }
 }
 
 public class ActivateLicenseCommandValidator : AbstractValidator<ActivateLicenseCommand>
 {
     public ActivateLicenseCommandValidator()
     {
+        RuleFor(x => x.LicenseKey)
+           .NotEmpty();
+        RuleFor(x => x.ActivatedByUserEmail)
+           .NotEmpty();
+        RuleFor(x => x.ActivatedMachineId)
+           .NotEmpty();
     }
 }
 
 public class ActivateLicenseCommandHandler : IRequestHandler<ActivateLicenseCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IUser _user;
 
-    public ActivateLicenseCommandHandler(IApplicationDbContext context, IUser user)
+    public ActivateLicenseCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _user = user;
     }
 
     public async Task Handle(ActivateLicenseCommand request, CancellationToken cancellationToken)
     {
-        var userId = _user.Id ?? throw new UnauthorizedAccessException();
-        var userEmail = _user.Email;
-
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == request.LicenseKey, cancellationToken);
         Guard.Against.NotFound(request.LicenseKey, license);
 
-        if (license.LicenseStatus != LicenseStatus.InActive) throw new ValidationException("License key invalid");
+        if (license.ExpirationDate <= DateTime.UtcNow || license.LicenseStatus != LicenseStatus.InActive  ) throw new ValidationException("License invalid");
 
         license.ActivationDate = DateTime.UtcNow;
-        license.ActivatedByUserId = userId;
-        license.ActivatedByUserEmail = userEmail;
         license.LicenseStatus = LicenseStatus.Active;
+        license.ActivatedByUserEmail = request.ActivatedByUserEmail;
+        license.ActivatedMachineId = request.ActivatedMachineId;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

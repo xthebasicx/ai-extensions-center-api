@@ -588,24 +588,12 @@
         ]
       }
     },
-    "/api/Licenses/checklicense": {
-      "put": {
+    "/api/Licenses/check-expiration": {
+      "post": {
         "tags": [
           "Licenses"
         ],
-        "operationId": "CheckLicense",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckLicenseCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
+        "operationId": "CheckExpirationLicense",
         "responses": {
           "200": {
             "description": ""
@@ -616,6 +604,31 @@
             "JWT": []
           }
         ]
+      }
+    },
+    "/api/Licenses/validate-license": {
+      "post": {
+        "tags": [
+          "Licenses"
+        ],
+        "operationId": "ValidateLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
       }
     },
     "/api/Users/register": {
@@ -1145,6 +1158,10 @@
           "activatedByUserEmail": {
             "type": "string",
             "nullable": true
+          },
+          "activatedMachineId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1182,6 +1199,14 @@
         "properties": {
           "licenseKey": {
             "type": "string"
+          },
+          "activatedByUserEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "activatedMachineId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1195,13 +1220,16 @@
           }
         }
       },
-      "CheckLicenseCommand": {
+      "ValidateLicenseCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "extensionId": {
             "type": "string",
             "format": "guid"
+          },
+          "licenseKey": {
+            "type": "string"
           }
         }
       },

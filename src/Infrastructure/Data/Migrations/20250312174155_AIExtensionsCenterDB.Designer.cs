@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250305114928_AIExtensionsCenterDB")]
+    [Migration("20250312174155_AIExtensionsCenterDB")]
     partial class AIExtensionsCenterDB
     {
         /// <inheritdoc />
@@ -115,8 +115,9 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("ActivatedByUserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("ActivatedMachineId")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("ActivationDate")
                         .HasColumnType("datetime2");
@@ -147,13 +148,7 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
                     b.Property<int>("LicenseStatus")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("ActivatedByUserId");
 
                     b.HasIndex("ExtensionId");
 
@@ -381,10 +376,6 @@ namespace AIExtensionsCenter.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("AIExtensionsCenter.Domain.Entities.License", b =>
                 {
-                    b.HasOne("AIExtensionsCenter.Infrastructure.Identity.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("ActivatedByUserId");
-
                     b.HasOne("AIExtensionsCenter.Domain.Entities.Extension", "Extension")
                         .WithMany("Licenses")
                         .HasForeignKey("ExtensionId")

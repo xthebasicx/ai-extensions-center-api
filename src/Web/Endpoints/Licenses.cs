@@ -1,10 +1,11 @@
 ﻿using AIExtensionsCenter.Application.Common.Models;
 using AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
-using AIExtensionsCenter.Application.Licenses.Commands.CheckLicense;
+using AIExtensionsCenter.Application.Licenses.Commands.CheckExpirationLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.UpdateLicense;
+using AIExtensionsCenter.Application.Licenses.Commands.ValidateLicense;
 using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseByExtensionId;
 using MediatR;
 
@@ -22,7 +23,10 @@ public class Licenses : EndpointGroupBase
             .MapDelete(DeleteLicense, "{id}")
             .MapPost(ActivateLicense, "activate")
             .MapPost(DeActivateLicense, "{id}/deactivate")
-            .MapPut(CheckLicense,"checklicense");
+            .MapPost(CheckExpirationLicense, "check-expiration");
+        app.MapGroup(this)
+            .MapPost(ValidateLicense, "validate-license");
+
     }
     private Task<List<LicenseVM>> GetLicenseByExtensionId(ISender sender, Guid id)
     {
@@ -54,9 +58,14 @@ public class Licenses : EndpointGroupBase
         await sender.Send(command);
         return Results.NoContent();
     }
-    private async Task<IResult> CheckLicense(ISender sender, CheckLicenseCommand command)
+    private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
     {
         await sender.Send(command);
+        return Results.Ok();
+    }
+    private async Task<IResult> CheckExpirationLicense(ISender sender)
+    {
+        await sender.Send(new CheckExpirationLicenseCommand());
         return Results.Ok();
     }
 }
