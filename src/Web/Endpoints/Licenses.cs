@@ -21,11 +21,11 @@ public class Licenses : EndpointGroupBase
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
             .MapDelete(DeleteLicense, "{id}")
-            .MapPost(ActivateLicense, "activate")
             .MapPost(DeActivateLicense, "{id}/deactivate")
             .MapPost(CheckExpirationLicense, "check-expiration");
         app.MapGroup(this)
-            .MapPost(ValidateLicense, "validate-license");
+            .MapPost(ActivateLicense, "activate")
+            .MapPost(ValidateLicense, "validate");
 
     }
     private Task<List<LicenseVM>> GetLicenseByExtensionId(ISender sender, Guid id)
@@ -50,7 +50,7 @@ public class Licenses : EndpointGroupBase
     private async Task<IResult> ActivateLicense(ISender sender, ActivateLicenseCommand command)
     {
         await sender.Send(command);
-        return Results.NoContent();
+        return Results.Ok();
     }
     private async Task<IResult> DeActivateLicense(ISender sender, Guid id, DeActivateLicenseCommand command)
     {
@@ -58,14 +58,14 @@ public class Licenses : EndpointGroupBase
         await sender.Send(command);
         return Results.NoContent();
     }
-    private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
-    {
-        await sender.Send(command);
-        return Results.Ok();
-    }
     private async Task<IResult> CheckExpirationLicense(ISender sender)
     {
         await sender.Send(new CheckExpirationLicenseCommand());
+        return Results.NoContent();
+    }
+    private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
+    {
+        await sender.Send(command);
         return Results.Ok();
     }
 }

@@ -8,8 +8,8 @@ namespace AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
 public record ActivateLicenseCommand : IRequest
 {
     public string LicenseKey { get; init; } = null!;
-    public string? ActivatedByUserEmail { get; init; }
-    public string? ActivatedMachineId { get; init; }
+    public string? Email { get; init; }
+    public string? HwId { get; init; }
 }
 
 public class ActivateLicenseCommandValidator : AbstractValidator<ActivateLicenseCommand>
@@ -18,9 +18,9 @@ public class ActivateLicenseCommandValidator : AbstractValidator<ActivateLicense
     {
         RuleFor(x => x.LicenseKey)
            .NotEmpty();
-        RuleFor(x => x.ActivatedByUserEmail)
+        RuleFor(x => x.Email)
            .NotEmpty();
-        RuleFor(x => x.ActivatedMachineId)
+        RuleFor(x => x.HwId)
            .NotEmpty();
     }
 }
@@ -39,12 +39,12 @@ public class ActivateLicenseCommandHandler : IRequestHandler<ActivateLicenseComm
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == request.LicenseKey, cancellationToken);
         Guard.Against.NotFound(request.LicenseKey, license);
 
-        if (license.ExpirationDate <= DateTime.UtcNow || license.LicenseStatus != LicenseStatus.InActive  ) throw new ValidationException("License invalid");
+        if (license.ExpirationDate <= DateTime.UtcNow || license.LicenseStatus != LicenseStatus.InActive) throw new ValidationException("License invalid");
 
         license.ActivationDate = DateTime.UtcNow;
         license.LicenseStatus = LicenseStatus.Active;
-        license.ActivatedByUserEmail = request.ActivatedByUserEmail;
-        license.ActivatedMachineId = request.ActivatedMachineId;
+        license.ActivatedByUserEmail = request.Email;
+        license.ActivatedMachineId = request.HwId;
 
         await _context.SaveChangesAsync(cancellationToken);
     }

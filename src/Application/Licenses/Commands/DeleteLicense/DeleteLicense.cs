@@ -1,6 +1,5 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Entities;
-using AIExtensionsCenter.Domain.Enums;
 using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;

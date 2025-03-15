@@ -516,36 +516,6 @@
         ]
       }
     },
-    "/api/Licenses/activate": {
-      "post": {
-        "tags": [
-          "Licenses"
-        ],
-        "operationId": "ActivateLicense",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ActivateLicenseCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
     "/api/Licenses/{id}/deactivate": {
       "post": {
         "tags": [
@@ -606,7 +576,32 @@
         ]
       }
     },
-    "/api/Licenses/validate-license": {
+    "/api/Licenses/activate": {
+      "post": {
+        "tags": [
+          "Licenses"
+        ],
+        "operationId": "ActivateLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/Licenses/validate": {
       "post": {
         "tags": [
           "Licenses"
@@ -1193,23 +1188,6 @@
           }
         }
       },
-      "ActivateLicenseCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "licenseKey": {
-            "type": "string"
-          },
-          "activatedByUserEmail": {
-            "type": "string",
-            "nullable": true
-          },
-          "activatedMachineId": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
       "DeActivateLicenseCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -1217,6 +1195,23 @@
           "id": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "ActivateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseKey": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "hwId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1230,6 +1225,10 @@
           },
           "licenseKey": {
             "type": "string"
+          },
+          "hwId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

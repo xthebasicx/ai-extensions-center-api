@@ -9,12 +9,19 @@ public record ValidateLicenseCommand : IRequest
 {
     public Guid ExtensionId { get; init; }
     public string LicenseKey { get; init; } = null!;
+    public string? HwId { get; init; }
 }
 
 public class ValidateLicenseCommandValidator : AbstractValidator<ValidateLicenseCommand>
 {
     public ValidateLicenseCommandValidator()
     {
+        RuleFor(x => x.ExtensionId)
+           .NotEmpty();
+        RuleFor(x => x.LicenseKey)
+           .NotEmpty();
+        RuleFor(x => x.HwId)
+           .NotEmpty();
     }
 }
 
@@ -31,6 +38,7 @@ public class ValidateLicenseCommandHandler : IRequestHandler<ValidateLicenseComm
     {
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == request.LicenseKey && x.ExtensionId == request.ExtensionId);
         Guard.Against.NotFound(request.LicenseKey, license);
+        if (license.ActivatedMachineId != request.HwId) throw new ValidationException("License invalid");
         if (license.LicenseStatus != LicenseStatus.Active) throw new ValidationException("License invalid");
     }
 }
