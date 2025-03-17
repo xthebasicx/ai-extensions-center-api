@@ -1,5 +1,6 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Domain.Constants;
+using AIExtensionsCenter.Infrastructure.BackgroundServices;
 using AIExtensionsCenter.Infrastructure.Data;
 using AIExtensionsCenter.Infrastructure.Data.Interceptors;
 using AIExtensionsCenter.Infrastructure.Identity;
@@ -22,6 +23,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        builder.Services.AddHostedService<LicenseExpiryService>();
 
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {

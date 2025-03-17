@@ -558,24 +558,6 @@
         ]
       }
     },
-    "/api/Licenses/check-expiration": {
-      "post": {
-        "tags": [
-          "Licenses"
-        ],
-        "operationId": "CheckExpirationLicense",
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "JWT": []
-          }
-        ]
-      }
-    },
     "/api/Licenses/activate": {
       "post": {
         "tags": [

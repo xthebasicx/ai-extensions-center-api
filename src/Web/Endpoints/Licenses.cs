@@ -1,6 +1,5 @@
 ﻿using AIExtensionsCenter.Application.Common.Models;
 using AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
-using AIExtensionsCenter.Application.Licenses.Commands.CheckExpirationLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
@@ -21,8 +20,7 @@ public class Licenses : EndpointGroupBase
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
             .MapDelete(DeleteLicense, "{id}")
-            .MapPost(DeActivateLicense, "{id}/deactivate")
-            .MapPost(CheckExpirationLicense, "check-expiration");
+            .MapPost(DeActivateLicense, "{id}/deactivate");
         app.MapGroup(this)
             .MapPost(ActivateLicense, "activate")
             .MapPost(ValidateLicense, "validate");
@@ -56,11 +54,6 @@ public class Licenses : EndpointGroupBase
     {
         if (id != command.Id) return Results.BadRequest("The provided ID does not match the command ID.");
         await sender.Send(command);
-        return Results.NoContent();
-    }
-    private async Task<IResult> CheckExpirationLicense(ISender sender)
-    {
-        await sender.Send(new CheckExpirationLicenseCommand());
         return Results.NoContent();
     }
     private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
