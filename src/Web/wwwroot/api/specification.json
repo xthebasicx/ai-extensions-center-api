@@ -87,6 +87,31 @@
         ]
       }
     },
+    "/api/Email/send-license": {
+      "post": {
+        "tags": [
+          "Email"
+        ],
+        "operationId": "SendLicenseEmail",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendLicenseEmailCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/Extensions": {
       "get": {
         "tags": [
@@ -1017,6 +1042,18 @@
           "key": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "SendLicenseEmailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "licenseKey": {
+            "type": "string"
           }
         }
       },

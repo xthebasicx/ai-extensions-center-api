@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="dotenv.net" />
+    <PackageReference Include="MailKit" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
