@@ -10,6 +10,7 @@ public record UpdateExtensionCommand : IRequest
     public Guid Id { get; init; }
     public string Name { get; init; } = null!;
     public string? Description { get; init; }
+    public string? ImageUrl { get; init; }
 }
 
 public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtensionCommand>
@@ -31,11 +32,13 @@ public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtension
 public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionCommand>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IFileStorageService _fileStorage;
     private readonly IUser _user;
 
-    public UpdateExtensionCommandHandler(IApplicationDbContext context, IUser user)
+    public UpdateExtensionCommandHandler(IApplicationDbContext context,IFileStorageService fileStorage, IUser user)
     {
         _context = context;
+        _fileStorage = fileStorage;
         _user = user;
     }
 
@@ -46,8 +49,14 @@ public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionComm
 
         if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
 
+        if(!string.IsNullOrEmpty(extension.ImageUrl))
+        {
+            await _fileStorage.DeleteFileAsync(extension.ImageUrl);
+        }
+
         extension.Name = request.Name;
         extension.Description = request.Description;
+        extension.ImageUrl = request.ImageUrl;
 
         _context.Extensions.Update(extension);
         await _context.SaveChangesAsync(cancellationToken);

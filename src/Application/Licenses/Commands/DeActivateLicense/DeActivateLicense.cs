@@ -5,9 +5,8 @@ using Ardalis.GuardClauses;
 
 namespace AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 
-public record DeActivateLicenseCommand : IRequest
+public record DeActivateLicenseCommand(Guid Id) : IRequest
 {
-    public Guid Id { get; init; }
 }
 
 public class DeActivateLicenseCommandValidator : AbstractValidator<DeActivateLicenseCommand>

@@ -87,31 +87,6 @@
         ]
       }
     },
-    "/api/Email/send-license": {
-      "post": {
-        "tags": [
-          "Email"
-        ],
-        "operationId": "SendLicenseEmail",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SendLicenseEmailCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/Extensions": {
       "get": {
         "tags": [
@@ -347,24 +322,12 @@
         ]
       }
     },
-    "/api/Extensions/{id}/upload-image": {
+    "/api/Extensions/upload-image": {
       "post": {
         "tags": [
           "Extensions"
         ],
         "operationId": "UploadImage",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -559,17 +522,35 @@
             "x-position": 1
           }
         ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/Licenses/send-license": {
+      "post": {
+        "tags": [
+          "Licenses"
+        ],
+        "operationId": "SendLicenseEmail",
         "requestBody": {
           "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeActivateLicenseCommand"
+                "$ref": "#/components/schemas/SendLicenseEmailCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -1045,18 +1026,6 @@
           }
         }
       },
-      "SendLicenseEmailCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "licenseKey": {
-            "type": "string"
-          }
-        }
-      },
       "PaginatedListOfExtensionVM": {
         "type": "object",
         "additionalProperties": false,
@@ -1120,6 +1089,10 @@
           "description": {
             "type": "string",
             "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1135,6 +1108,10 @@
             "type": "string"
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
             "type": "string",
             "nullable": true
           }
@@ -1207,13 +1184,15 @@
           }
         }
       },
-      "DeActivateLicenseCommand": {
+      "SendLicenseEmailCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
+          "email": {
+            "type": "string"
+          },
+          "licenseKey": {
+            "type": "string"
           }
         }
       },

@@ -15,7 +15,7 @@ public static class DependencyInjection
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddScoped<IUser, CurrentUser>();
-        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IEmailSender, EmailSender>();
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddHealthChecks()

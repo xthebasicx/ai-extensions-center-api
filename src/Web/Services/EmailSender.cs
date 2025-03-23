@@ -4,11 +4,11 @@ using MimeKit;
 
 namespace AIExtensionsCenter.Web.Services;
 
-public class EmailService : IEmailService
+public class EmailSender : IEmailSender
 {
     private readonly IConfiguration _configuration;
 
-    public EmailService(IConfiguration configuration)
+    public EmailSender(IConfiguration configuration)
     {
         _configuration = configuration;
     }

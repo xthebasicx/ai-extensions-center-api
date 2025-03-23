@@ -1,6 +1,7 @@
 using AIExtensionsCenter.Infrastructure.Data;
 #if DEBUG
 using dotenv.net;
+using Microsoft.Extensions.FileProviders;
 DotEnv.Load();
 #endif
 
@@ -33,7 +34,12 @@ app.UseHealthChecks("/health");
 app.UseCors("CorsPolicy");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+    RequestPath = "/uploads"
+});
 
 
 app.UseExceptionHandler(options => { });

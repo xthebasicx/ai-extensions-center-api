@@ -1,6 +1,6 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 
-namespace AIExtensionsCenter.Application.Email.Commands.SendLicenseEmail;
+namespace AIExtensionsCenter.Application.Licenses.Commands.SendLicenseEmail;
 
 public record SendLicenseEmailCommand : IRequest
 {
@@ -22,18 +22,18 @@ public class SendLicenseEmailCommandValidator : AbstractValidator<SendLicenseEma
 
 public class SendLicenseEmailCommandHandler : IRequestHandler<SendLicenseEmailCommand>
 {
-    private readonly IEmailService _emailService;
+    private readonly IEmailSender _sender;
 
-    public SendLicenseEmailCommandHandler(IEmailService emailService)
+    public SendLicenseEmailCommandHandler(IEmailSender sender)
     {
-        _emailService = emailService;
+        _sender = sender;
     }
 
     public async Task Handle(SendLicenseEmailCommand request, CancellationToken cancellationToken)
     {
-        var subject = "Your License Key";
+        var subject = "AI Extensions Center";
         var body = $"<p>Your license key is: <strong>{request.LicenseKey}</strong></p>";
 
-        await _emailService.SendEmailAsync(request.Email, subject, body);
+        await _sender.SendEmailAsync(request.Email, subject, body);
     }
 }

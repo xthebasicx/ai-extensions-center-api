@@ -3,10 +3,12 @@ using AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeleteLicense;
+using AIExtensionsCenter.Application.Licenses.Commands.SendLicenseEmail;
 using AIExtensionsCenter.Application.Licenses.Commands.UpdateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.ValidateLicense;
 using AIExtensionsCenter.Application.Licenses.Queries.GetLicenseByExtensionId;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AIExtensionsCenter.Web.Endpoints;
 
@@ -20,7 +22,8 @@ public class Licenses : EndpointGroupBase
             .MapPost(CreateLicense)
             .MapPut(UpdateLicense, "{id}")
             .MapDelete(DeleteLicense, "{id}")
-            .MapPost(DeActivateLicense, "{id}/deactivate");
+            .MapPost(DeActivateLicense, "{id}/deactivate")
+            .MapPost(SendLicenseEmail, "send-license");
         app.MapGroup(this)
             .MapPost(ActivateLicense, "activate")
             .MapPost(ValidateLicense, "validate");
@@ -50,13 +53,17 @@ public class Licenses : EndpointGroupBase
         await sender.Send(command);
         return Results.Ok();
     }
-    private async Task<IResult> DeActivateLicense(ISender sender, Guid id, DeActivateLicenseCommand command)
+    private async Task<IResult> DeActivateLicense(ISender sender, Guid id)
     {
-        if (id != command.Id) return Results.BadRequest("The provided ID does not match the command ID.");
-        await sender.Send(command);
+        await sender.Send(new DeActivateLicenseCommand(id));
         return Results.NoContent();
     }
     private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
+    {
+        await sender.Send(command);
+        return Results.Ok();
+    }
+    public async Task<IResult> SendLicenseEmail(ISender sender, [FromBody] SendLicenseEmailCommand command)
     {
         await sender.Send(command);
         return Results.Ok();

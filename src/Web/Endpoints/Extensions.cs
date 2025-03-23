@@ -22,7 +22,7 @@ public class Extensions : EndpointGroupBase
             .MapPost(CreateExtension)
             .MapPut(UpdateExtension, "{id}")
             .MapDelete(DeleteExtension, "{id}")
-            .MapPost(UploadImage, "{id}/upload-image");
+            .MapPost(UploadImage, "upload-image");
 
     }
     private Task<PaginatedList<ExtensionVM>> GetExtensionWithPagination(ISender sender, [AsParameters] GetExtensionQuery query)
@@ -52,10 +52,10 @@ public class Extensions : EndpointGroupBase
         await sender.Send(new DeleteExtensionCommand(id));
         return Results.NoContent();
     }
-    private async Task<IResult> UploadImage(Guid id, IFormFile file, ISender sender, IFileStorageService fileStorage)
+    private async Task<IResult> UploadImage(IFormFile file, ISender sender)
     {
-        var command = new UploadExtensionImageCommand(id, file);
+        var command = new UploadExtensionImageCommand(file);
         var result = await sender.Send(command);
-        return Results.Ok(new { ImageUrl = result });
+        return Results.Ok(result);
     }
 }

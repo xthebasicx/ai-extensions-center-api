@@ -7,6 +7,7 @@ public record CreateExtensionCommand : IRequest<Guid>
 {
     public string Name { get; init; } = null!;
     public string? Description { get; init; }
+    public string? ImageUrl { get; init; }
 
 }
 
@@ -42,7 +43,8 @@ public class CreateExtensionCommandHandler : IRequestHandler<CreateExtensionComm
         {
             Name = request.Name,
             Description = request.Description,
-            UserId = userId
+            UserId = userId,
+            ImageUrl = request.ImageUrl,
         };
 
         _context.Extensions.Add(extension);
