@@ -35,7 +35,7 @@ public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionComm
     private readonly IFileStorageService _fileStorage;
     private readonly IUser _user;
 
-    public UpdateExtensionCommandHandler(IApplicationDbContext context,IFileStorageService fileStorage, IUser user)
+    public UpdateExtensionCommandHandler(IApplicationDbContext context, IFileStorageService fileStorage, IUser user)
     {
         _context = context;
         _fileStorage = fileStorage;
@@ -49,7 +49,7 @@ public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionComm
 
         if (extension.UserId != _user.Id) throw new ForbiddenAccessException();
 
-        if(!string.IsNullOrEmpty(extension.ImageUrl))
+        if (!string.IsNullOrEmpty(extension.ImageUrl))
         {
             await _fileStorage.DeleteFileAsync(extension.ImageUrl);
         }

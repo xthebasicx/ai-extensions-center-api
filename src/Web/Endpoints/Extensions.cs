@@ -1,5 +1,4 @@
-﻿using AIExtensionsCenter.Application.Common.Interfaces;
-using AIExtensionsCenter.Application.Common.Models;
+﻿using AIExtensionsCenter.Application.Common.Models;
 using AIExtensionsCenter.Application.Extensions.Commands.CreateExtension;
 using AIExtensionsCenter.Application.Extensions.Commands.DeleteExtension;
 using AIExtensionsCenter.Application.Extensions.Commands.UpdateExtension;

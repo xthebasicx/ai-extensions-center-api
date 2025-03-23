@@ -23,6 +23,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        builder.Services.AddScoped<IRubyFileService, RubyFileService>();
         builder.Services.AddHostedService<LicenseExpiryService>();
 
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
