@@ -36,7 +36,7 @@ public class CreateLicenseCommandHandler : IRequestHandler<CreateLicenseCommand,
             .Where(x => x.ExtensionId == request.ExtensionId && (x.LicenseStatus == LicenseStatus.InActive || x.LicenseStatus == LicenseStatus.Active))
             .CountAsync(cancellationToken);
 
-        if (licenseCount >= 20) throw new ValidationException("This extension has already reached the maximum licenses.");
+        if (licenseCount >= 100) throw new ValidationException("This extension has already reached the maximum licenses.");
 
         string licensekey = Guid.NewGuid().ToString();
 

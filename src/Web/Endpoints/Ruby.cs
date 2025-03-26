@@ -9,6 +9,7 @@ public class Ruby : EndpointGroupBase
     public override void Map(WebApplication app)
     {
         app.MapGroup(this)
+            .RequireAuthorization()
             .MapGet(DownloadRubyFile, "download");
     }
     private async Task<IResult> DownloadRubyFile(ISender sender, [FromQuery] string extensionId)
