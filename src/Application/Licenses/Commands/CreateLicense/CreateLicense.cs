@@ -43,7 +43,7 @@ public class CreateLicenseCommandHandler : IRequestHandler<CreateLicenseCommand,
         License? license = new()
         {
             LicenseKey = licensekey,
-            ExpirationDate = request.ExpirationDate,
+            ExpirationDate = request.ExpirationDate.ToUniversalTime(),
             ExtensionId = request.ExtensionId
         };
 

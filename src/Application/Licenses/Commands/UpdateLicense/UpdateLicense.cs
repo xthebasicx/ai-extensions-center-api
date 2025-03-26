@@ -36,7 +36,7 @@ public class UpdateLicenseCommandHandler : IRequestHandler<UpdateLicenseCommand>
         License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, license);
 
-        license.ExpirationDate = request.ExpirationDate;
+        license.ExpirationDate = request.ExpirationDate.ToUniversalTime();
 
         _context.Licenses.Update(license);
         await _context.SaveChangesAsync(cancellationToken);
