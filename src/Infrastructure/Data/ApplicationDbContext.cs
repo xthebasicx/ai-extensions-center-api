@@ -13,7 +13,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplica
 
     public DbSet<Extension> Extensions => Set<Extension>();
     public DbSet<License> Licenses => Set<License>();
-    public DbSet<APIKey> APIKeys => Set<APIKey>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

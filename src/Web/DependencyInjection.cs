@@ -10,8 +10,11 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection
 {
-    public static void AddWebServices(this IHostApplicationBuilder builder)
+    public static void AddWebServices(this IHostApplicationBuilder builder, IConfiguration configuration)
     {
+        var Cors = configuration["CORS"];
+        Guard.Against.Null(Cors, message: "Configuration not found.");
+
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddScoped<IUser, CurrentUser>();
@@ -27,7 +30,7 @@ public static class DependencyInjection
         {
             options.AddPolicy("CorsPolicy", policy =>
             {
-                policy.WithOrigins("http://localhost:5173")
+                policy.WithOrigins(Cors)
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
