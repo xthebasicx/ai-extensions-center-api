@@ -1,13 +1,13 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
-using AIExtensionsCenter.Application.Common.Mappings;
 using AIExtensionsCenter.Application.Common.Models;
+using AIExtensionsCenter.Domain.Entities;
+using Ardalis.GuardClauses;
+using Org.BouncyCastle.Asn1.X509;
 
 namespace AIExtensionsCenter.Application.Extensions.Queries.GetExtensionByUserId;
 
-public record GetExtensionByUserIdQuery : IRequest<PaginatedList<ExtensionVM>>
+public record GetExtensionByUserIdQuery : IRequest<List<ExtensionVM>>
 {
-    public int PageNumber { get; init; } = 1;
-    public int PageSize { get; init; } = 10;
 }
 
 public class GetExtensionByUserIdQueryValidator : AbstractValidator<GetExtensionByUserIdQuery>
@@ -17,26 +17,38 @@ public class GetExtensionByUserIdQueryValidator : AbstractValidator<GetExtension
     }
 }
 
-public class GetExtensionByUserIdQueryHandler : IRequestHandler<GetExtensionByUserIdQuery, PaginatedList<ExtensionVM>>
+public class GetExtensionByUserIdQueryHandler : IRequestHandler<GetExtensionByUserIdQuery, List<ExtensionVM>>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
     private readonly IUser _user;
+    private readonly IMapper _mapper;
+    private readonly IFileStorageService _fileStorage;
 
-    public GetExtensionByUserIdQueryHandler(IApplicationDbContext context, IMapper mapper, IUser user)
+    public GetExtensionByUserIdQueryHandler(IApplicationDbContext context, IUser user, IMapper mapper, IFileStorageService fileStorageService)
     {
         _context = context;
-        _mapper = mapper;
         _user = user;
+        _mapper = mapper;
+        _fileStorage = fileStorageService;
     }
 
-    public async Task<PaginatedList<ExtensionVM>> Handle(GetExtensionByUserIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<ExtensionVM>> Handle(GetExtensionByUserIdQuery request, CancellationToken cancellationToken)
     {
         var userId = _user.Id ?? throw new UnauthorizedAccessException();
 
-        return await _context.Extensions
-            .Where(e => e.UserId == userId)
-            .ProjectTo<ExtensionVM>(_mapper.ConfigurationProvider)
-            .PaginatedListAsync(request.PageNumber, request.PageSize);
+        List<ExtensionVM> extensions = await _context.Extensions
+        .Where(x => x.UserId == userId)
+        .ProjectTo<ExtensionVM>(_mapper.ConfigurationProvider)
+        .ToListAsync(cancellationToken);
+
+        Guard.Against.NotFound(userId, extensions);
+
+        var tasks = extensions
+        .Where(x => !string.IsNullOrEmpty(x.ImageUrl))
+        .Select(async x => x.ImageUrl = await _fileStorage.GetPresignedUrlAsync(x.ImageUrl!));
+
+        await Task.WhenAll(tasks);
+
+        return extensions;
     }
 }

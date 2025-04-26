@@ -29,11 +29,13 @@ public class GetLicenseByExtensionIdQueryHandler : IRequestHandler<GetLicenseByE
 
     public async Task<List<LicenseVM>> Handle(GetLicenseByExtensionIdQuery request, CancellationToken cancellationToken)
     {
-        List<License> licenses = await _context.Licenses
-            .Where(x => x.ExtensionId == request.Id)
-            .ToListAsync(cancellationToken);
+        var licenses = await _context.Licenses
+        .Where(x => x.ExtensionId == request.Id)
+        .ProjectTo<LicenseVM>(_mapper.ConfigurationProvider)
+        .ToListAsync(cancellationToken);
+
         Guard.Against.NotFound(request.Id, licenses);
 
-        return _mapper.Map<List<LicenseVM>>(licenses);
+        return licenses;
     }
 }

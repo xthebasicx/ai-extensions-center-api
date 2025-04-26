@@ -22,17 +22,24 @@ public class GetExtensionByIdQueryHandler : IRequestHandler<GetExtensionByIdQuer
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IFileStorageService _fileStorage;
 
-    public GetExtensionByIdQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetExtensionByIdQueryHandler(IApplicationDbContext context, IMapper mapper, IFileStorageService fileStorage)
     {
         _context = context;
         _mapper = mapper;
+        _fileStorage = fileStorage;
     }
 
     public async Task<ExtensionVM> Handle(GetExtensionByIdQuery request, CancellationToken cancellationToken)
     {
         Extension? extension = await _context.Extensions.FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
         Guard.Against.NotFound(request.Id, extension);
+
+        if (!string.IsNullOrEmpty(extension.ImageUrl))
+        {
+            extension.ImageUrl = await _fileStorage.GetPresignedUrlAsync(extension.ImageUrl);
+        }
 
         return _mapper.Map<ExtensionVM>(extension);
     }

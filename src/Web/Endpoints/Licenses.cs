@@ -1,4 +1,5 @@
 ﻿using AIExtensionsCenter.Application.Common.Models;
+using AIExtensionsCenter.Application.Helper;
 using AIExtensionsCenter.Application.Licenses.Commands.ActivateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.CreateLicense;
 using AIExtensionsCenter.Application.Licenses.Commands.DeActivateLicense;
@@ -51,7 +52,7 @@ public class Licenses : EndpointGroupBase
     private async Task<IResult> ActivateLicense(ISender sender, ActivateLicenseCommand command)
     {
         await sender.Send(command);
-        return Results.Ok();
+        return Results.Ok(new { result = AesHelper.Encrypt("Success") });
     }
     private async Task<IResult> DeActivateLicense(ISender sender, Guid id)
     {
@@ -61,7 +62,7 @@ public class Licenses : EndpointGroupBase
     private async Task<IResult> ValidateLicense(ISender sender, ValidateLicenseCommand command)
     {
         await sender.Send(command);
-        return Results.Ok();
+        return Results.Ok(new { result = AesHelper.Encrypt("Success") });
     }
     public async Task<IResult> SendLicenseEmail(ISender sender, [FromBody] SendLicenseEmailCommand command)
     {

@@ -1,14 +1,15 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace AIExtensionsCenter.Web.Services;
+namespace AIExtensionsCenter.Infrastructure.Services;
 
-public class EmailSender : IEmailSender
+public class AppEmailSender : IAppEmailSender
 {
     private readonly IConfiguration _configuration;
 
-    public EmailSender(IConfiguration configuration)
+    public AppEmailSender(IConfiguration configuration)
     {
         _configuration = configuration;
     }

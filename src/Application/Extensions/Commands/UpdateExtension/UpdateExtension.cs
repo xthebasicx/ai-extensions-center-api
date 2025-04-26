@@ -11,6 +11,7 @@ public record UpdateExtensionCommand : IRequest
     public string Name { get; init; } = null!;
     public string? Description { get; init; }
     public string? ImageUrl { get; init; }
+    public string? ModuleName { get; init; }
 }
 
 public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtensionCommand>
@@ -26,6 +27,9 @@ public class UpdateExtensionCommandValidator : AbstractValidator<UpdateExtension
 
         RuleFor(x => x.Description)
             .MaximumLength(150).WithMessage("Description cannot exceed 500 characters");
+
+        RuleFor(x => x.ModuleName)
+            .NotEmpty();
     }
 }
 
@@ -57,6 +61,7 @@ public class UpdateExtensionCommandHandler : IRequestHandler<UpdateExtensionComm
         extension.Name = request.Name;
         extension.Description = request.Description;
         extension.ImageUrl = request.ImageUrl;
+        extension.ModuleName = request.ModuleName;
 
         _context.Extensions.Update(extension);
         await _context.SaveChangesAsync(cancellationToken);

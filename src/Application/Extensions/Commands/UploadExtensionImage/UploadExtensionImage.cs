@@ -29,6 +29,7 @@ public class UploadExtensionImageCommandHandler : IRequestHandler<UploadExtensio
     public async Task<string> Handle(UploadExtensionImageCommand request, CancellationToken cancellationToken)
     {
         var imageUrl = await _fileStorage.SaveFileAsync(request.File, "extensions");
+
         return imageUrl;
     }
 }

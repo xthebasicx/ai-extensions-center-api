@@ -36,4 +36,9 @@ public class LocalFileStorageService : IFileStorageService
 
         return Task.CompletedTask;
     }
+
+    public Task<string> GetPresignedUrlAsync(string objectName, int expiryInSeconds = 3600)
+    {
+        throw new NotImplementedException();
+    }
 }

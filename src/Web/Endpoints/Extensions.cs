@@ -15,20 +15,24 @@ public class Extensions : EndpointGroupBase
     {
         app.MapGroup(this)
             .RequireAuthorization()
-            .MapGet(GetExtensionWithPagination)
-            .MapGet(GetExtensionByUserId, "user")
+            .MapGet(GetExtensionsByUserId, "user")
+            .MapGet(GetExtensionWithPagination, "paginated")
+            .MapGet(GetExtensionWithPaginationByUserId, "user-paginated")
             .MapGet(GetExtensionById, "{id}")
             .MapPost(CreateExtension)
             .MapPut(UpdateExtension, "{id}")
             .MapDelete(DeleteExtension, "{id}")
             .MapPost(UploadImage, "upload-image");
-
     }
-    private Task<PaginatedList<ExtensionVM>> GetExtensionWithPagination(ISender sender, [AsParameters] GetExtensionQuery query)
+    private Task<List<ExtensionVM>> GetExtensionsByUserId(ISender sender)
+    {
+        return sender.Send(new GetExtensionByUserIdQuery());
+    }
+    private Task<PaginatedList<ExtensionVM>> GetExtensionWithPagination(ISender sender, [AsParameters] GetExtensionWithPaginationQuery query)
     {
         return sender.Send(query);
     }
-    private Task<PaginatedList<ExtensionVM>> GetExtensionByUserId(ISender sender, [AsParameters] GetExtensionByUserIdQuery query)
+    private Task<PaginatedList<ExtensionVM>> GetExtensionWithPaginationByUserId(ISender sender, [AsParameters] GetExtensionWithPaginationByUserIdQuery query)
     {
         return sender.Send(query);
     }

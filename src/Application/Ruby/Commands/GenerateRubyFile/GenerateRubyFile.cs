@@ -4,11 +4,13 @@ namespace AIExtensionsCenter.Application.Commands
 {
     public class GenerateRubyFileCommand : IRequest<byte[]>
     {
-        public string ExtensionId { get; set; }
+        public string ExtensionId { get; init; }
+        public string ModuleName { get; init; }
 
-        public GenerateRubyFileCommand(string extensionId)
+        public GenerateRubyFileCommand(string extensionId, string moduleName)
         {
             ExtensionId = extensionId;
+            ModuleName = moduleName;
         }
     }
 
@@ -23,7 +25,7 @@ namespace AIExtensionsCenter.Application.Commands
 
         public async Task<byte[]> Handle(GenerateRubyFileCommand request, CancellationToken cancellationToken)
         {
-            return await _rubyFileService.GenerateRubyFileAsync(request.ExtensionId);
+            return await _rubyFileService.GenerateRubyFileAsync(request.ExtensionId, request.ModuleName);
         }
     }
 }

@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Minio;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -20,9 +21,10 @@ public static class DependencyInjection
         var connectionString = configuration["DB_URI"];
         Guard.Against.Null(connectionString, message: "Connection string 'DB_URI' not found.");
 
+        builder.Services.AddTransient<IAppEmailSender, AppEmailSender>();
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
-        builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+        builder.Services.AddScoped<IFileStorageService, MinioFileStorageService>();
         builder.Services.AddScoped<IRubyFileService, RubyFileService>();
         builder.Services.AddHostedService<LicenseExpiryService>();
 
@@ -32,6 +34,24 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString);
         });
 
+        var endpoint = configuration["MINIO:Endpoint"];
+        var accessKey = configuration["MINIO:AccessKey"];
+        var secretKey = configuration["MINIO:SecretKey"];
+        var region = configuration["MINIO:Region"];
+        var useSSL = configuration.GetValue<bool>("MINIO:Usessl");
+
+        Guard.Against.Null(endpoint, message: "Connection string 'Endpoint' not found.");
+        Guard.Against.Null(accessKey, message: "Connection string 'AccessKey' not found.");
+        Guard.Against.Null(secretKey, message: "Connection string 'SecretKey' not found.");
+        Guard.Against.Null(region, message: "Connection string 'Region' not found.");
+        Guard.Against.Null(useSSL, message: "Connection string 'Usessl' not found.");
+
+        builder.Services.AddSingleton(new MinioClient()
+            .WithEndpoint(endpoint)
+            .WithCredentials(accessKey,secretKey)
+            .WithRegion(region)
+            .WithSSL(useSSL)
+            .Build());
 
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
@@ -44,7 +64,10 @@ public static class DependencyInjection
         builder.Services.AddAuthorizationBuilder();
 
         builder.Services
-            .AddIdentityCore<ApplicationUser>()
+            .AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+            })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddApiEndpoints();

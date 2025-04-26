@@ -1,7 +1,8 @@
 using AIExtensionsCenter.Infrastructure.Data;
+using Microsoft.Extensions.FileProviders;
+
 #if DEBUG
 using dotenv.net;
-using Microsoft.Extensions.FileProviders;
 DotEnv.Load();
 #endif
 

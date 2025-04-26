@@ -8,6 +8,7 @@ public record CreateExtensionCommand : IRequest<Guid>
     public string Name { get; init; } = null!;
     public string? Description { get; init; }
     public string? ImageUrl { get; init; }
+    public string? ModuleName { get; init; }
 
 }
 
@@ -21,6 +22,9 @@ public class CreateExtensionCommandValidator : AbstractValidator<CreateExtension
 
         RuleFor(x => x.Description)
             .MaximumLength(150).WithMessage("Description cannot exceed 150 characters");
+
+        RuleFor(x => x.ModuleName)
+            .NotEmpty();
     }
 }
 
@@ -45,6 +49,7 @@ public class CreateExtensionCommandHandler : IRequestHandler<CreateExtensionComm
             Description = request.Description,
             UserId = userId,
             ImageUrl = request.ImageUrl,
+            ModuleName = request.ModuleName,
         };
 
         _context.Extensions.Add(extension);

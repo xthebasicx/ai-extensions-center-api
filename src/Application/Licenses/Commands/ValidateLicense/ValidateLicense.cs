@@ -1,4 +1,5 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
+using AIExtensionsCenter.Application.Helper;
 using AIExtensionsCenter.Domain.Entities;
 using AIExtensionsCenter.Domain.Enums;
 using Ardalis.GuardClauses;
@@ -36,9 +37,12 @@ public class ValidateLicenseCommandHandler : IRequestHandler<ValidateLicenseComm
 
     public async Task Handle(ValidateLicenseCommand request, CancellationToken cancellationToken)
     {
-        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == request.LicenseKey && x.ExtensionId == request.ExtensionId);
-        Guard.Against.NotFound(request.LicenseKey, license);
+        string decryptedLicenseKey = AesHelper.Decrypt(request.LicenseKey);
+
+        License? license = await _context.Licenses.FirstOrDefaultAsync(x => x.LicenseKey == decryptedLicenseKey && x.ExtensionId == request.ExtensionId);
+        Guard.Against.NotFound(decryptedLicenseKey, license);
         if (license.ActivatedMachineId != request.HwId) throw new ValidationException("License invalid");
         if (license.LicenseStatus != LicenseStatus.Active) throw new ValidationException("License invalid");
+
     }
 }

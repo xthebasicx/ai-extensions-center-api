@@ -12,9 +12,9 @@ public class Ruby : EndpointGroupBase
             .RequireAuthorization()
             .MapGet(DownloadRubyFile, "download");
     }
-    private async Task<IResult> DownloadRubyFile(ISender sender, [FromQuery] string extensionId)
+    private async Task<IResult> DownloadRubyFile(ISender sender, [FromQuery] string extensionId, [FromQuery] string moduleName)
     {
-        var fileBytes = await sender.Send(new GenerateRubyFileCommand(extensionId));
-        return Results.File(fileBytes, "application/octet-stream", "AiExtensionsCenter.rb");
+        var fileBytes = await sender.Send(new GenerateRubyFileCommand(extensionId,moduleName));
+        return Results.File(fileBytes, "application/zip", "AIExtensionCenter.zip");
     }
 }

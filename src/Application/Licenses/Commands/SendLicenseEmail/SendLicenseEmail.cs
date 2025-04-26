@@ -22,9 +22,9 @@ public class SendLicenseEmailCommandValidator : AbstractValidator<SendLicenseEma
 
 public class SendLicenseEmailCommandHandler : IRequestHandler<SendLicenseEmailCommand>
 {
-    private readonly IEmailSender _sender;
+    private readonly IAppEmailSender _sender;
 
-    public SendLicenseEmailCommandHandler(IEmailSender sender)
+    public SendLicenseEmailCommandHandler(IAppEmailSender sender)
     {
         _sender = sender;
     }

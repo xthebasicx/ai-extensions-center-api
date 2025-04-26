@@ -1,6 +1,6 @@
 ﻿namespace AIExtensionsCenter.Application.Common.Interfaces
 {
-    public interface IEmailSender
+    public interface IAppEmailSender
     {
         Task SendEmailAsync(string to, string subject, string body);
     }

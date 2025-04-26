@@ -1,6 +1,7 @@
 ﻿using AIExtensionsCenter.Application.Common.Interfaces;
 using AIExtensionsCenter.Infrastructure.Data;
 using AIExtensionsCenter.Web.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 using NSwag;
@@ -17,8 +18,8 @@ public static class DependencyInjection
 
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+        builder.Services.AddTransient<IEmailSender, IdentityEmailSenderAdapter>();
         builder.Services.AddScoped<IUser, CurrentUser>();
-        builder.Services.AddScoped<IEmailSender, EmailSender>();
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddHealthChecks()

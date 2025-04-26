@@ -2,6 +2,6 @@
 {
     public interface IRubyFileService
     {
-        Task<byte[]> GenerateRubyFileAsync(string extensionId);
+        Task<byte[]> GenerateRubyFileAsync(string extensionId, string moduleName);
     }
 }
